@@ -1,0 +1,32 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+def rgb_fft(image):
+    f_size = 30
+    fft_images = []
+    fft_images_log = []
+    for i in range(3):
+        rgb_fft = np.fft.fftshift(np.fft.fft2(image[:, :, i]))
+        fft_images.append(rgb_fft)
+        fft_images_log.append(np.log(abs(rgb_fft))) 
+    return fft_images, fft_images_log
+# Load an image using OpenCV
+image_path = 'C:/Users/Hp-D/OneDrive/Desktop/mask2.png'
+image = cv2.imread(image_path)
+plt.figure(figsize=(15, 5))
+# Display the original image
+plt.subplot(131)
+plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+plt.title('Original Image')
+# Call the rgb_fft function
+fft_images, fft_images_log = rgb_fft(image)
+# Display the first FFT image
+plt.subplot(132)
+plt.imshow(np.abs(fft_images[0]), cmap='gray')
+plt.title('FFT Image (Channel 1)')
+# Display the first Logarithm of FFT Image
+plt.subplot(133)
+plt.imshow(fft_images_log[0], cmap='gray')
+plt.title('Logarithm of FFT Image (Channel 1)')
+plt.tight_layout()
+plt.show()
